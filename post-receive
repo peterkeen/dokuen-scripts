@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+import os
+import os.path
+
+remotes = os.popen("git remote").read().split("\n")
+
+if "s3" not in remotes:
+    print "Creating S3 remote"
+    cwd = os.getcwd()
+    cwd = cwd.replace("/Users/git/repositories/", '')
+    os.popen("git remote add s3 amazon-s3://.jgit@bugsplat-git-repos/%s" % cwd).read()
+
+print "Pushing to S3"
+os.popen("/usr/bin/env GIT_DIR=. /usr/local/bin/jgit push --all s3")
